@@ -16,6 +16,7 @@ public class MemoryBlockTest {
     public void setup() {
         mMemoryBlock = new MemoryBlock(OFFSET, SIZE);
     }
+
     @Test
     public void testReadWrite() throws Exception {
         mMemoryBlock.write(OFFSET + 3, (byte) 4);

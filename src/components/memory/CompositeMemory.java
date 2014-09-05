@@ -49,18 +49,14 @@ public class CompositeMemory implements Memory {
 
     @Override
     public byte read(int address) {
-        checkRange(address);
+        MemoryUtils.checkRange(address, this);
         return findBlock(0, mBlocks.size(), address).read(address);
     }
 
     @Override
     public void write(int address, byte value) {
-        checkRange(address);
+        MemoryUtils.checkRange(address, this);
         findBlock(0, mBlocks.size(), address).write(address, value);
-    }
-
-    private void checkRange(int address) {
-        Preconditions.checkArgument(address < mMemoryRange.end && address >= mMemoryRange.start);
     }
 
     private Memory findBlock(int startIndex, int endIndex, int address) {
