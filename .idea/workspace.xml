@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="80e62c0e-a54a-43f4-b8af-d1795e933301" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/Clock.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/components/ClockTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/ForceHighPrecisionSleepDaemon.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/testutil/Mean.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/MemoryBlock.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/testutil/StandardDeviation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/cglib_nodep_2_2_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fest_assert_1_4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fest_util_1_1_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/guava_18_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/hamcrest_core_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/javassist_3_18_2_GA.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/junit_4_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_all_1_9_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/objenesis_2_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/powermock_mockito_1_5_5_full.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-    </list>
+    <list default="true" id="80e62c0e-a54a-43f4-b8af-d1795e933301" name="Default" comment="" />
     <ignored path="MyNesEmulator.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -73,7 +55,7 @@
       </breakpoint>
     </breakpoint_any>
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <line_breakpoints>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home/src.zip!/java/lang/Thread.java" line="331" class="java.lang.Thread" package="java.lang">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -99,88 +81,102 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ForceHighPrecisionSleepDaemon.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/ForceHighPrecisionSleepDaemon.java">
+      <file leaf-file-name="Memory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/memory/Memory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="87" selection-start="112" selection-end="112" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
+            <state line="3" column="24" selection-start="56" selection-end="56" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Clock.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Clock.java">
+      <file leaf-file-name="CompositeMemory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/memory/CompositeMemory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="69" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="3" max-vertical-offset="1290">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StandardDeviation.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/testutil/StandardDeviation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="19" selection-end="98" vertical-scroll-proportion="0.052910052" vertical-offset="0" max-vertical-offset="567">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Mean.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/testutil/Mean.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="34" selection-start="57" selection-end="57" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="315">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClockTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/components/ClockTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="21" selection-start="421" selection-end="421" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2430">
+            <state line="27" column="7" selection-start="740" selection-end="740" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="1485">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3743#3986#0" expanded="true" />
-                <element signature="e#3979#3980#0" expanded="true" />
+                <element signature="e#3163#3164#0" expanded="true" />
+                <element signature="e#3198#3199#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PrepareForTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/core/classloader/annotations/PrepareForTest.java">
+      <file leaf-file-name="Preconditions.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/Downloads/guava-18.0.jar!/com/google/common/base/Preconditions.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="29" selection-start="2950" selection-end="2950" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="960">
+            <state line="45" column="0" selection-start="2600" selection-end="2600" vertical-scroll-proportion="-11.0" vertical-offset="385" max-vertical-offset="750">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Answers.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/Answers.java">
+      <file leaf-file-name="Lists.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/Downloads/guava-18.0.jar!/com/google/common/collect/Lists.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="4" selection-start="1540" selection-end="1540" vertical-scroll-proportion="0.0" vertical-offset="569" max-vertical-offset="1200">
+            <state line="14" column="46" selection-start="561" selection-end="561" vertical-scroll-proportion="-3.4" vertical-offset="110" max-vertical-offset="3735">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PowerMockito.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/api/mockito/PowerMockito.java">
+      <file leaf-file-name="ParentRunner.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/runners/ParentRunner.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="87" selection-start="4402" selection-end="4402" vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="11265">
+            <state line="44" column="25" selection-start="2400" selection-end="2400" vertical-scroll-proportion="-3.4" vertical-offset="560" max-vertical-offset="1080">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlockJUnit4ClassRunner.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/runners/BlockJUnit4ClassRunner.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="1425">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CompositeMemoryTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/components/memory/CompositeMemoryTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="27" selection-start="983" selection-end="983" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1425">
               <folding>
-                <element signature="e#4369#4398#1" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Answer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/stubbing/Answer.java">
+      <file leaf-file-name="MemoryBlockTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tests/components/memory/MemoryBlockTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="17" selection-start="953" selection-end="953" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
+            <state line="15" column="25" selection-start="324" selection-end="324" vertical-scroll-proportion="0.5952381" vertical-offset="0" max-vertical-offset="615">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MemoryBlock.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/memory/MemoryBlock.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="24" selection-start="83" selection-end="83" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
+              <folding>
+                <element signature="e#713#714#0" expanded="true" />
+                <element signature="e#748#749#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MemoryRange.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/memory/MemoryRange.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="23" selection-start="55" selection-end="55" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
               <folding />
             </state>
           </provider>
@@ -210,6 +206,13 @@
         <option value="$PROJECT_DIR$/src/components/Clock.java" />
         <option value="$PROJECT_DIR$/src/components/Daemon.java" />
         <option value="$PROJECT_DIR$/src/components/ForceHighPrecisionSleepDaemon.java" />
+        <option value="$PROJECT_DIR$/tests/components/memory/MemoryTest.java" />
+        <option value="$PROJECT_DIR$/tests/components/memory/CompositeMemoryBlockTest.java" />
+        <option value="$PROJECT_DIR$/src/components/memory/CompositeMemoryBlock.java" />
+        <option value="$PROJECT_DIR$/src/components/memory/Memory2.java" />
+        <option value="$PROJECT_DIR$/src/components/memory/MemoryBlock.java" />
+        <option value="$PROJECT_DIR$/src/components/memory/MemoryRange.java" />
+        <option value="$PROJECT_DIR$/src/components/memory/Memory.java" />
       </list>
     </option>
   </component>
@@ -244,6 +247,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -297,6 +301,20 @@
               <option name="myItemId" value="tests" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyNesEmulator" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyNesEmulator" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="components" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
@@ -319,10 +337,13 @@
               <option name="myItemId" value="components" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="memory" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -351,17 +372,18 @@
     <property name="OverrideImplement.overriding.sorted" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="components.memory" />
+      <recent name="components" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
-    </key>
-    <key name="CreateTestDialog.RecentsKey">
-      <recent name="components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ClockTest">
+  <component name="RunManager" selected="JUnit.All in MyNesEmulator">
     <configuration default="false" name="ClockTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MyNesEmulator" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -390,14 +412,36 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="ClockTest.testWithOccasionalOvershooting" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="MemoryBlockTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MyNesEmulator" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="components" />
-      <option name="MAIN_CLASS_NAME" value="components.ClockTest" />
-      <option name="METHOD_NAME" value="testWithOccasionalOvershooting" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="components.memory" />
+      <option name="MAIN_CLASS_NAME" value="components.memory.MemoryBlockTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="CompositeMemoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="MyNesEmulator" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="components.memory" />
+      <option name="MAIN_CLASS_NAME" value="components.memory.CompositeMemoryTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -415,6 +459,50 @@
       </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="components.memory in MyNesEmulator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="MyNesEmulator" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="components.memory" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="All in MyNesEmulator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="MyNesEmulator" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -545,14 +633,20 @@
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
-    <list size="2">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="JUnit.ClockTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.ClockTest.testWithOccasionalOvershooting" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.MemoryBlockTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.CompositeMemoryTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.components.memory in MyNesEmulator" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.All in MyNesEmulator" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.ClockTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.ClockTest.testWithOccasionalOvershooting" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="JUnit.All in MyNesEmulator" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.components.memory in MyNesEmulator" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.CompositeMemoryTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.MemoryBlockTest" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.ClockTest" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -595,22 +689,22 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3283582" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.52089554" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.07761194" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31688127" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35970148" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985073" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -637,51 +731,77 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/Before.class">
+    <entry file="file://$PROJECT_DIR$/src/components/ForceHighPrecisionSleepDaemon.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="18" selection-start="307" selection-end="307" vertical-scroll-proportion="0.17017828" vertical-offset="0" max-vertical-offset="617" />
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/api/mockito/PowerMockito.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="87" selection-start="4402" selection-end="4402" vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="11265">
-          <folding>
-            <element signature="e#4369#4398#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/stubbing/Answer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="17" selection-start="953" selection-end="953" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/Answers.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="4" selection-start="1540" selection-end="1540" vertical-scroll-proportion="0.0" vertical-offset="569" max-vertical-offset="1200">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/core/classloader/annotations/PrepareForTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="29" selection-start="2950" selection-end="2950" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="960">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home/src.zip!/java/lang/Thread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="324" column="23" selection-start="10681" selection-end="10681" vertical-scroll-proportion="0.25520834" vertical-offset="4207" max-vertical-offset="30210">
+        <state line="3" column="87" selection-start="112" selection-end="112" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Clock.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="69" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="3" max-vertical-offset="1290">
+        <state line="47" column="69" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="705" max-vertical-offset="1290">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/testutil/StandardDeviation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="30" selection-start="277" selection-end="277" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="390">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/testutil/Mean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="34" selection-start="57" selection-end="57" vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="315">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/components/ClockTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="21" selection-start="421" selection-end="421" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="2430">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/core/classloader/annotations/PrepareForTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="29" selection-start="2950" selection-end="2950" vertical-scroll-proportion="0.0" vertical-offset="1080" max-vertical-offset="1200">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/Answers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="4" selection-start="1540" selection-end="1540" vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="1320">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/api/mockito/PowerMockito.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="87" selection-start="4402" selection-end="4402" vertical-scroll-proportion="0.0" vertical-offset="1470" max-vertical-offset="11955">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/stubbing/Answer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="17" selection-start="953" selection-end="953" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="660">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/Before.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="18" selection-start="307" selection-end="307" vertical-scroll-proportion="0.17017828" vertical-offset="0" max-vertical-offset="617" />
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home/src.zip!/java/lang/Thread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="324" column="23" selection-start="10681" selection-end="10681" vertical-scroll-proportion="0.25520834" vertical-offset="4207" max-vertical-offset="30210">
           <folding />
         </state>
       </provider>
@@ -693,14 +813,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/components/ClockTest.java">
+    <entry file="file://$PROJECT_DIR$/tests/testutil/StandardDeviation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="21" selection-start="421" selection-end="421" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2430">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3743#3986#0" expanded="true" />
-            <element signature="e#3979#3980#0" expanded="true" />
-          </folding>
+        <state line="18" column="39" selection-start="538" selection-end="538" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="390">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -711,10 +827,147 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/testutil/StandardDeviation.java">
+    <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/core/classloader/annotations/PrepareForTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="19" selection-end="98" vertical-scroll-proportion="0.052910052" vertical-offset="0" max-vertical-offset="567">
+        <state line="72" column="29" selection-start="2950" selection-end="2950" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="960">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/Answers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="4" selection-start="1540" selection-end="1540" vertical-scroll-proportion="0.0" vertical-offset="569" max-vertical-offset="1200">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/powermock-mockito-1.5.5-full.jar!/org/powermock/api/mockito/PowerMockito.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="87" selection-start="4402" selection-end="4402" vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="11265">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/mockito-all-1.9.5.jar!/org/mockito/stubbing/Answer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="17" selection-start="953" selection-end="953" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/guava-18.0.jar!/com/google/common/collect/Maps.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="55" selection-start="1906" selection-end="1906" vertical-scroll-proportion="0.3464837" vertical-offset="323" max-vertical-offset="14685">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/components/ClockTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="21" selection-start="421" selection-end="421" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2340">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="40" selection-start="388" selection-end="388" vertical-scroll-proportion="-6.0" vertical-offset="0" max-vertical-offset="255">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/runners/ParentRunner.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="25" selection-start="2400" selection-end="2400" vertical-scroll-proportion="-3.4" vertical-offset="560" max-vertical-offset="1080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/junit-4.11.jar!/org/junit/runners/BlockJUnit4ClassRunner.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1425">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/guava-18.0.jar!/com/google/common/collect/Lists.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="46" selection-start="561" selection-end="561" vertical-scroll-proportion="-3.4" vertical-offset="110" max-vertical-offset="3735">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/guava-18.0.jar!/com/google/common/collect/ImmutableMap.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="70" selection-start="1425" selection-end="1425" vertical-scroll-proportion="0.5764706" vertical-offset="149" max-vertical-offset="2250">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Downloads/guava-18.0.jar!/com/google/common/base/Preconditions.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="0" selection-start="2600" selection-end="2600" vertical-scroll-proportion="-11.0" vertical-offset="385" max-vertical-offset="750">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/memory/CompositeMemory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="7" selection-start="740" selection-end="740" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="1485">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3163#3164#0" expanded="true" />
+            <element signature="e#3198#3199#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/memory/MemoryBlock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="24" selection-start="83" selection-end="83" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
+          <folding>
+            <element signature="e#713#714#0" expanded="true" />
+            <element signature="e#748#749#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/memory/Memory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="24" selection-start="56" selection-end="56" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Clock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="15" selection-start="1915" selection-end="1915" vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="1290">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/memory/MemoryRange.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="23" selection-start="55" selection-end="55" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/components/memory/CompositeMemoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="27" selection-start="983" selection-end="983" vertical-scroll-proportion="0.0" vertical-offset="309" max-vertical-offset="1425">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/components/memory/MemoryBlockTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="25" selection-start="324" selection-end="324" vertical-scroll-proportion="0.5952381" vertical-offset="0" max-vertical-offset="615">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
