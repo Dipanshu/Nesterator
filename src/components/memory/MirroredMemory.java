@@ -24,12 +24,12 @@ public class MirroredMemory implements Memory {
     }
 
     @Override
-    public byte read(int address) {
+    public int read(int address) {
         return mBaseMemory.read(getMappedAddress(address));
     }
 
     @Override
-    public void write(int address, byte value) {
+    public void write(int address, int value) {
         MemoryUtils.checkRange(address, this);
         mBaseMemory.write(getMappedAddress(address), value);
     }

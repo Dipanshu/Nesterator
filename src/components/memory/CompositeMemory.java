@@ -48,13 +48,13 @@ public class CompositeMemory implements Memory {
     }
 
     @Override
-    public byte read(int address) {
+    public int read(int address) {
         MemoryUtils.checkRange(address, this);
         return findBlock(0, mBlocks.size(), address).read(address);
     }
 
     @Override
-    public void write(int address, byte value) {
+    public void write(int address, int value) {
         MemoryUtils.checkRange(address, this);
         findBlock(0, mBlocks.size(), address).write(address, value);
     }

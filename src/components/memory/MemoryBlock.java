@@ -16,14 +16,20 @@ public class MemoryBlock implements Memory {
         mMemoryRange = new MemoryRange(mStartAddress, mStartAddress + mLength);
     }
 
-    @Override
-    public byte read(int address) {
-        return mData[address - mStartAddress];
+    public MemoryBlock(int startAddress, byte[] data) {
+        mData = data;
+        mStartAddress = startAddress;
+        mMemoryRange = new MemoryRange(mStartAddress, mStartAddress + mData.length);
     }
 
     @Override
-    public void write(int address, byte value) {
-        mData[address - mStartAddress] = value;
+    public int read(int address) {
+        return mData[address - mStartAddress] & 0xFF;
+    }
+
+    @Override
+    public void write(int address, int value) {
+        mData[address - mStartAddress] = (byte) (value & 0xFF);
     }
 
     @Override

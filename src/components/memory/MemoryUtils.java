@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 
 public class MemoryUtils {
     public static void checkRange(int address, MemoryRange range) {
-        Preconditions.checkArgument(address < range.end && address >= range.start);
+        Preconditions.checkArgument(address < range.end && address >= range.start, range.toString() + " does not contain " + address);
     }
 
     public static void checkRange(int address, Memory block) {
