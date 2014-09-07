@@ -1,10 +1,14 @@
 package hardware.cpu;
 
 import components.memory.Memory;
+import components.memory.MemoryRange;
 import hardware.cpu.registers.Registers;
 import hardware.cpu.registers.StatusRegister;
 
 import static hardware.cpu.AdressingUtils.AddressingMode.*;
+import static hardware.cpu.AdressingUtils.OperationType.READ;
+import static hardware.cpu.AdressingUtils.OperationType.READ_WRITE;
+import static hardware.cpu.AdressingUtils.OperationType.WRITE;
 
 public class Cpu {
     public static final int SIGN_BIT_MASK = (1 << StatusRegister.SIGN);
@@ -17,12 +21,36 @@ public class Cpu {
     private final Registers mRegisters;
     private final AdressingUtils mAdressingUtils;
 
-    public Cpu(Memory memory) {
+    private int mNumOpcodeCycles;
+    private int mNumTotalCycles;
+
+    private boolean mIsFirstPop;
+
+    public Cpu(final Memory memory) {
         mRegisters = new Registers();
-        mMemory = memory;
+        mMemory = new Memory() {
+            @Override
+            public int read(int address) {
+                mNumOpcodeCycles++;
+                return memory.read(address);
+            }
+
+            @Override
+            public void write(int address, int value) {
+                mNumOpcodeCycles++;
+                memory.write(address, value);
+            }
+
+            @Override
+            public MemoryRange getRange() {
+                return memory.getRange();
+            }
+        };
+
         mRegisters.PC = 0xC000;
         mRegisters.SP = 0xFD;
         mAdressingUtils = new AdressingUtils(this, mMemory, mRegisters);
+        mNumTotalCycles = 0;
     }
 
     public boolean isDebugMode() {
@@ -33,10 +61,19 @@ public class Cpu {
         mDebugMode = debugMode;
     }
 
+    protected void onPageBoundaryCrossed() {
+        mNumOpcodeCycles++;
+    }
+
     private void branchRelative() {
         byte operandDelta = (byte) readByte();
+        mNumOpcodeCycles += 1;
+        int previousPC = mRegisters.PC;
         mRegisters.PC += operandDelta;
         mRegisters.PC &= 0xFFFF;
+        if ((previousPC & 0xFF00) != (mRegisters.PC & 0xFF00)) {
+            mNumOpcodeCycles += 1;
+        }
     }
 
     private void throwAwayBytes(int num) {
@@ -51,6 +88,16 @@ public class Cpu {
         mRegisters.PC &= 0xFFFF;
         debug(String.format("  %02X", readValue));
         mPCReadCounter++;
+        return readValue;
+    }
+
+    protected int dummyRead() {
+        int readValue = mMemory.read(mRegisters.PC);
+        return readValue;
+    }
+
+    protected int dummyRead(int address) {
+        int readValue = mMemory.read(address);
         return readValue;
     }
 
@@ -223,56 +270,72 @@ public class Cpu {
     }
 
     private void DCP(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        final int decrementedValue = decrement(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        final int decrementedValue = decrement(originalValue);
         mMemory.write(address, decrementedValue);
         CMP(decrementedValue);
     }
 
     private void ISC(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        final int incrementedValue = increment(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        final int incrementedValue = increment(originalValue);
         mMemory.write(address, incrementedValue);
         SBC(incrementedValue);
     }
 
     private void SLO(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        final int aslValue = ASL(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        final int aslValue = ASL(originalValue);
         mMemory.write(address, aslValue);
         OR(aslValue);
     }
 
     private void RLA(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        final int rolValue = ROL(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        final int rolValue = ROL(originalValue);
         mMemory.write(address, rolValue);
         AND(rolValue);
     }
 
     private void SRE(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        final int lsrValue = LSR(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        final int lsrValue = LSR(originalValue);
         mMemory.write(address, lsrValue);
         XOR(lsrValue);
     }
 
     private void RRA(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        final int rorValue = ROR(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        final int rorValue = ROR(originalValue);
         mMemory.write(address, rorValue);
         ADC(rorValue);
     }
 
     private void DEC(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        int value = decrement(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        int value = decrement(originalValue);
         mMemory.write(address, value);
     }
 
     private void INC(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        int value = increment(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        int value = increment(originalValue);
         mMemory.write(address, value);
     }
 
@@ -287,6 +350,10 @@ public class Cpu {
     }
 
     private int pop() {
+        if (mIsFirstPop) {
+            mNumOpcodeCycles++;
+            mIsFirstPop = false;
+        }
         mRegisters.SP++;
         return mMemory.read(0x0100 | mRegisters.SP);
     }
@@ -296,6 +363,7 @@ public class Cpu {
         mRegisters.PC &= 0xFFFF;
         push(mRegisters.PC >> 8);
         push(mRegisters.PC);
+        dummyRead();
         JMP(addressToJumpTo);
     }
 
@@ -319,27 +387,35 @@ public class Cpu {
 
 
     private void doASL(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        int value = ASL(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        int value = ASL(originalValue);
         mMemory.write(address, value);
     }
 
     private void doLSR(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        int value = LSR(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        int value = LSR(originalValue);
         mMemory.write(address, value);
     }
 
     private void doROR(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        int value = ROR(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        int value = ROR(originalValue);
         mMemory.write(address, value);
     }
 
 
     private void doROL(AdressingUtils.AddressingMode addressingMode) {
-        int address = mAdressingUtils.getAddressForOperand(addressingMode);
-        int value = ROL(mMemory.read(address));
+        int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
+        final int originalValue = mMemory.read(address);
+        mMemory.write(address, originalValue);
+        int value = ROL(originalValue);
         mMemory.write(address, value);
     }
 
@@ -362,97 +438,99 @@ public class Cpu {
 
     public void process() {
         breakOn(0xE92E);
+        mNumOpcodeCycles = 0;
         mDebugLog = new StringBuilder();
         debug(String.format("%04X", mRegisters.PC));
         mPCReadCounter = 0;
         int instruction = readByte();
         String registerInfo = mRegisters.toString();
         boolean unknownOpCode = false;
+        mIsFirstPop = true;
         switch (instruction) {
             /**
              * AAC (Undocumented)
              */
             case 0x0B:
             case 0x2B:
-                AAC(mAdressingUtils.getOperand(IMMEDIATE, this));
+                AAC(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
 
             /**
              * AAX (Undocumented)
              */
             case 0x87:
-                AAX(mAdressingUtils.getAddressForOperand(ZEROPAGE));
+                AAX(mAdressingUtils.getAddressForOperand(ZEROPAGE, READ));
                 break;
             case 0x97:
-                AAX(mAdressingUtils.getAddressForOperand(ZEROPAGE_Y));
+                AAX(mAdressingUtils.getAddressForOperand(ZEROPAGE_Y, READ));
                 break;
             case 0x83:
-                AAX(mAdressingUtils.getAddressForOperand(ZEROPAGE_INDIRECT_X));
+                AAX(mAdressingUtils.getAddressForOperand(ZEROPAGE_INDIRECT_X, READ));
                 break;
             case 0x8F:
-                AAX(mAdressingUtils.getAddressForOperand(ABSOLUTE));
+                AAX(mAdressingUtils.getAddressForOperand(ABSOLUTE, READ));
                 break;
             /**
              * ADC
              */
             case 0x69:
-                ADC(mAdressingUtils.getOperand(IMMEDIATE, this));
+                ADC(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0x65:
-                ADC(mAdressingUtils.getOperand(ZEROPAGE, this));
+                ADC(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0x75:
-                ADC(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                ADC(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0x6D:
-                ADC(mAdressingUtils.getOperand(ABSOLUTE, this));
+                ADC(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0x7D:
-                ADC(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                ADC(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0x79:
-                ADC(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                ADC(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0x61:
-                ADC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                ADC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0x71:
-                ADC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                ADC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
              * AND
              */
             case 0x29:
-                AND(mAdressingUtils.getOperand(IMMEDIATE, this));
+                AND(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0x25:
-                AND(mAdressingUtils.getOperand(ZEROPAGE, this));
+                AND(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0x35:
-                AND(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                AND(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0x2D:
-                AND(mAdressingUtils.getOperand(ABSOLUTE, this));
+                AND(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0x3D:
-                AND(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                AND(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0x39:
-                AND(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                AND(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0x21:
-                AND(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                AND(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0x31:
-                AND(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                AND(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
              * ASL
              */
             case 0x0A:
-                mRegisters.A = ASL(mAdressingUtils.getOperand(ACCUMULATOR, this));
+                mRegisters.A = ASL(mAdressingUtils.getOperand(ACCUMULATOR, this, READ_WRITE));
                 break;
             case 0x06:
                 doASL(ZEROPAGE);
@@ -532,10 +610,10 @@ public class Cpu {
              * Bit tests
              */
             case 0x24:
-                BIT(mAdressingUtils.getOperand(ZEROPAGE, this));
+                BIT(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0x2C:
-                BIT(mAdressingUtils.getOperand(ABSOLUTE, this));
+                BIT(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
 
             /**
@@ -575,54 +653,54 @@ public class Cpu {
              * Compare Accumulator with memory
              */
             case 0xC9:
-                CMP(mAdressingUtils.getOperand(IMMEDIATE, this));
+                CMP(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xC5:
-                CMP(mAdressingUtils.getOperand(ZEROPAGE, this));
+                CMP(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xD5:
-                CMP(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                CMP(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0xCD:
-                CMP(mAdressingUtils.getOperand(ABSOLUTE, this));
+                CMP(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0xDD:
-                CMP(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                CMP(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0xD9:
-                CMP(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                CMP(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0xC1:
-                CMP(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                CMP(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0xD1:
-                CMP(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                CMP(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
              * Compare X with Memeory
              */
             case 0xE0:
-                CPX(mAdressingUtils.getOperand(IMMEDIATE, this));
+                CPX(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xE4:
-                CPX(mAdressingUtils.getOperand(ZEROPAGE, this));
+                CPX(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xEC:
-                CPX(mAdressingUtils.getOperand(ABSOLUTE, this));
+                CPX(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
 
             /**
              * Compare Y with Memeory
              */
             case 0xC0:
-                CPY(mAdressingUtils.getOperand(IMMEDIATE, this));
+                CPY(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xC4:
-                CPY(mAdressingUtils.getOperand(ZEROPAGE, this));
+                CPY(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xCC:
-                CPY(mAdressingUtils.getOperand(ABSOLUTE, this));
+                CPY(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
 
             /**
@@ -676,28 +754,28 @@ public class Cpu {
              * XOR
              */
             case 0x49:
-                XOR(mAdressingUtils.getOperand(IMMEDIATE, this));
+                XOR(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0x45:
-                XOR(mAdressingUtils.getOperand(ZEROPAGE, this));
+                XOR(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0x55:
-                XOR(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                XOR(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0x4D:
-                XOR(mAdressingUtils.getOperand(ABSOLUTE, this));
+                XOR(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0x5D:
-                XOR(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                XOR(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0x59:
-                XOR(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                XOR(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0x41:
-                XOR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                XOR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0x51:
-                XOR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                XOR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
@@ -751,108 +829,108 @@ public class Cpu {
              * Jump
              */
             case 0x4C:
-                JMP(mAdressingUtils.getAddressForOperand(ABSOLUTE));
+                JMP(mAdressingUtils.getAddressForOperand(ABSOLUTE, READ));
                 break;
             case 0x6C:
-                JMP(mAdressingUtils.getAddressForOperand(INDIRECT));
+                JMP(mAdressingUtils.getAddressForOperand(INDIRECT, READ));
                 break;
             case 0x20:
-                JSR(mAdressingUtils.getAddressForOperand(ABSOLUTE));
+                JSR(mAdressingUtils.getAddressForOperand(ABSOLUTE, READ));
                 break;
 
             /**
              * LAX (Undocumented)
              */
             case 0xA7:
-                LAX(mAdressingUtils.getOperand(ZEROPAGE, this));
+                LAX(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xB7:
-                LAX(mAdressingUtils.getOperand(ZEROPAGE_Y, this));
+                LAX(mAdressingUtils.getOperand(ZEROPAGE_Y, this, READ));
                 break;
             case 0xAF:
-                LAX(mAdressingUtils.getOperand(ABSOLUTE, this));
+                LAX(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0xBF:
-                LAX(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                LAX(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0xA3:
-                LAX(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                LAX(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0xB3:
-                LAX(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                LAX(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
              * LDA
              */
             case 0xA9:
-                LDA(mAdressingUtils.getOperand(IMMEDIATE, this));
+                LDA(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xA5:
-                LDA(mAdressingUtils.getOperand(ZEROPAGE, this));
+                LDA(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xB5:
-                LDA(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                LDA(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0xAD:
-                LDA(mAdressingUtils.getOperand(ABSOLUTE, this));
+                LDA(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0xBD:
-                LDA(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                LDA(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0xB9:
-                LDA(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                LDA(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0xA1:
-                LDA(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                LDA(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0xB1:
-                LDA(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                LDA(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
              * LDX
              */
             case 0xA2:
-                LDX(mAdressingUtils.getOperand(IMMEDIATE, this));
+                LDX(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xA6:
-                LDX(mAdressingUtils.getOperand(ZEROPAGE, this));
+                LDX(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xB6:
-                LDX(mAdressingUtils.getOperand(ZEROPAGE_Y, this));
+                LDX(mAdressingUtils.getOperand(ZEROPAGE_Y, this, READ));
                 break;
             case 0xAE:
-                LDX(mAdressingUtils.getOperand(ABSOLUTE, this));
+                LDX(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0xBE:
-                LDX(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                LDX(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
 
             /**
              * LDY
              */
             case 0xA0:
-                LDY(mAdressingUtils.getOperand(IMMEDIATE, this));
+                LDY(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xA4:
-                LDY(mAdressingUtils.getOperand(ZEROPAGE, this));
+                LDY(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xB4:
-                LDY(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                LDY(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0xAC:
-                LDY(mAdressingUtils.getOperand(ABSOLUTE, this));
+                LDY(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0xBC:
-                LDY(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                LDY(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
 
             /**
              * LSR
              */
             case 0x4A:
-                mRegisters.A = LSR(mAdressingUtils.getOperand(ACCUMULATOR, this));
+                mRegisters.A = LSR(mAdressingUtils.getOperand(ACCUMULATOR, this, READ));
                 break;
             case 0x46:
                 doLSR(ZEROPAGE);
@@ -884,10 +962,10 @@ public class Cpu {
             case 0xC2:
             case 0xE2:
             case 0x89:
-                mAdressingUtils.getOperand(IMMEDIATE, this);
+                mAdressingUtils.getOperand(IMMEDIATE, this, READ);
                 break;
             case 0x0C:
-                mAdressingUtils.getOperand(ABSOLUTE, this);
+                mAdressingUtils.getOperand(ABSOLUTE, this, READ);
                 break;
             case 0x1C:
             case 0x3C:
@@ -895,12 +973,12 @@ public class Cpu {
             case 0x7C:
             case 0xDC:
             case 0xFC:
-                mAdressingUtils.getOperand(ABSOLUTE_X, this);
+                mAdressingUtils.getOperand(ABSOLUTE_X, this, READ);
                 break;
             case 0x04:
             case 0x44:
             case 0x64:
-                mAdressingUtils.getOperand(ZEROPAGE, this);
+                mAdressingUtils.getOperand(ZEROPAGE, this, READ);
                 break;
             case 0x14:
             case 0x34:
@@ -908,43 +986,45 @@ public class Cpu {
             case 0x74:
             case 0xD4:
             case 0xF4:
-                mAdressingUtils.getOperand(ZEROPAGE_X, this);
+                mAdressingUtils.getOperand(ZEROPAGE_X, this, READ);
                 break;
             /**
              * OR
              */
             case 0x09:
-                OR(mAdressingUtils.getOperand(IMMEDIATE, this));
+                OR(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0x05:
-                OR(mAdressingUtils.getOperand(ZEROPAGE, this));
+                OR(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0x15:
-                OR(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                OR(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0x0D:
-                OR(mAdressingUtils.getOperand(ABSOLUTE, this));
+                OR(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0x1D:
-                OR(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                OR(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0x19:
-                OR(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                OR(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0x01:
-                OR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                OR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0x11:
-                OR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                OR(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
              * Stack
              */
             case 0x48:
+                dummyRead();
                 push(mRegisters.A);
                 break;
             case 0x08: {
+                dummyRead();
                 int flags = mRegisters.flags.getRegister();
                 flags |= 1 << StatusRegister.BREAK;
                 flags |= 1 << StatusRegister.NOT_USED;
@@ -952,11 +1032,13 @@ public class Cpu {
                 break;
             }
             case 0x68:
+                dummyRead();
                 mRegisters.A = pop();
                 setZero(mRegisters.A);
                 setSign(mRegisters.A);
                 break;
             case 0x28:
+                dummyRead();
                 mRegisters.flags.setRegister(pop());
                 break;
 
@@ -964,7 +1046,7 @@ public class Cpu {
              * ROL
              */
             case 0x2A:
-                mRegisters.A = ROL(mAdressingUtils.getOperand(ACCUMULATOR, this));
+                mRegisters.A = ROL(mAdressingUtils.getOperand(ACCUMULATOR, this, READ));
                 break;
             case 0x26:
                 doROL(ZEROPAGE);
@@ -983,7 +1065,7 @@ public class Cpu {
              * ROR
              */
             case 0x6A:
-                mRegisters.A = ROR(mAdressingUtils.getOperand(ACCUMULATOR, this));
+                mRegisters.A = ROR(mAdressingUtils.getOperand(ACCUMULATOR, this, READ));
                 break;
             case 0x66:
                 doROR(ZEROPAGE);
@@ -1052,6 +1134,7 @@ public class Cpu {
              * Return
              */
             case 0x40: {
+                dummyRead();
                 mRegisters.flags.setRegister(pop());
                 int pcLow = pop();
                 int pcHigh = pop();
@@ -1059,8 +1142,12 @@ public class Cpu {
                 break;
             }
             case 0x60: {
+                dummyRead();
                 int pcLow = pop();
                 int pcHigh = pop();
+
+                // For incrementing PC
+                mNumOpcodeCycles++;
                 mRegisters.PC = ((((pcHigh << 8) | pcLow) + 1) & 0xFFFF);
                 break;
             }
@@ -1095,28 +1182,28 @@ public class Cpu {
              */
             case 0xE9:
             case 0xEB: // Undocumented
-                SBC(mAdressingUtils.getOperand(IMMEDIATE, this));
+                SBC(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
                 break;
             case 0xE5:
-                SBC(mAdressingUtils.getOperand(ZEROPAGE, this));
+                SBC(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
             case 0xF5:
-                SBC(mAdressingUtils.getOperand(ZEROPAGE_X, this));
+                SBC(mAdressingUtils.getOperand(ZEROPAGE_X, this, READ));
                 break;
             case 0xED:
-                SBC(mAdressingUtils.getOperand(ABSOLUTE, this));
+                SBC(mAdressingUtils.getOperand(ABSOLUTE, this, READ));
                 break;
             case 0xFD:
-                SBC(mAdressingUtils.getOperand(ABSOLUTE_X, this));
+                SBC(mAdressingUtils.getOperand(ABSOLUTE_X, this, READ));
                 break;
             case 0xF9:
-                SBC(mAdressingUtils.getOperand(ABSOLUTE_Y, this));
+                SBC(mAdressingUtils.getOperand(ABSOLUTE_Y, this, READ));
                 break;
             case 0xE1:
-                SBC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this));
+                SBC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_X, this, READ));
                 break;
             case 0xF1:
-                SBC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this));
+                SBC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
                 break;
 
             /**
@@ -1161,51 +1248,51 @@ public class Cpu {
              * STA
              */
             case 0x85:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE, WRITE), mRegisters.A);
                 break;
             case 0x95:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_X), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_X, WRITE), mRegisters.A);
                 break;
             case 0x8D:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE, WRITE), mRegisters.A);
                 break;
             case 0x9D:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE_X), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE_X, WRITE), mRegisters.A);
                 break;
             case 0x99:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE_Y), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE_Y, WRITE), mRegisters.A);
                 break;
             case 0x81:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_INDIRECT_X), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_INDIRECT_X, WRITE), mRegisters.A);
                 break;
             case 0x91:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_INDIRECT_Y), mRegisters.A);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_INDIRECT_Y, WRITE), mRegisters.A);
                 break;
 
             /**
              * STX
              */
             case 0x86:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE), mRegisters.X);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE, WRITE), mRegisters.X);
                 break;
             case 0x96:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_Y), mRegisters.X);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_Y, WRITE), mRegisters.X);
                 break;
             case 0x8E:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE), mRegisters.X);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE, WRITE), mRegisters.X);
                 break;
 
             /**
              * STY
              */
             case 0x84:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE), mRegisters.Y);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE, WRITE), mRegisters.Y);
                 break;
             case 0x94:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_X), mRegisters.Y);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ZEROPAGE_X, WRITE), mRegisters.Y);
                 break;
             case 0x8C:
-                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE), mRegisters.Y);
+                mMemory.write(mAdressingUtils.getAddressForOperand(ABSOLUTE, WRITE), mRegisters.Y);
                 break;
 
             /**
@@ -1249,8 +1336,13 @@ public class Cpu {
         if (mPCReadCounter < 2) {
             debug("    ");
         }
+        if (mNumOpcodeCycles == 1) {
+            dummyRead();
+        }
 
-        debug("  " + registerInfo);
+        debug("  " + registerInfo + String.format("CYC:%3d", mNumTotalCycles));
+        mNumTotalCycles += mNumOpcodeCycles * 3;
+        mNumTotalCycles %= 341;
 
         if (unknownOpCode) {
             debug("Unknown Opcode");
