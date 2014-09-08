@@ -4,6 +4,7 @@ import components.memory.CompositeMemory;
 import components.memory.Memory;
 import components.memory.MemoryBlock;
 import components.memory.MirroredMemory;
+import hardware.ppu.registers.PpuRegisters;
 
 public class NesMemory extends CompositeMemory {
 
@@ -14,7 +15,7 @@ public class NesMemory extends CompositeMemory {
     public static NesMemory createNesMemory(byte[] prg1, byte[] prg2) {
         MemoryBlock ram = new MemoryBlock(0, 0x800);
         MirroredMemory totalRam = new MirroredMemory(ram, 4);
-        MemoryBlock ppuRegisters = new MemoryBlock(0x2000, 8);
+        PpuRegisters ppuRegisters = new PpuRegisters();
         MirroredMemory ppuRegistersMirrored = new MirroredMemory(ppuRegisters, 1024);
         MemoryBlock underConstruction = new MemoryBlock(0x4000, 0x2000);
         MemoryBlock sRam = new MemoryBlock(0x6000, 0x2000);
