@@ -170,6 +170,21 @@ public class Cpu {
         return value;
     }
 
+    private int getSubtractResultAndSetFlagsWithoutBorrow(int firstOperand, int secondOperand) {
+        int value = firstOperand - secondOperand;
+        /*
+        mRegisters.flags.setFlag(StatusRegister.OVERFLOW,
+                (firstOperand & SIGN_BIT_MASK) != (secondOperand & SIGN_BIT_MASK) &&
+                        ((firstOperand & SIGN_BIT_MASK) != (value & SIGN_BIT_MASK))
+        );
+        */
+        setSign(value);
+        setZero(value);
+        mRegisters.flags.setFlag(StatusRegister.CARRY, firstOperand >= (secondOperand));
+        value &= 0xFF;
+        return value;
+    }
+
     private int decrement(int operand) {
         int result = (operand - 1) & 0xFF;
         setSign(result);
@@ -192,10 +207,35 @@ public class Cpu {
     }
 
     private void AAC(int operand) {
-        int value = mRegisters.A & operand;
-        setSign(value);
-        setZero(value);
+        mRegisters.A = mRegisters.A & operand;
+        setSign(mRegisters.A);
+        setZero(mRegisters.A);
         mRegisters.flags.setFlag(StatusRegister.CARRY, mRegisters.flags.getFlag(StatusRegister.SIGN));
+    }
+
+    private void ALR(int operand) {
+        AND(operand);
+        mRegisters.A = LSR(mRegisters.A);
+    }
+
+    private void ARR(int operand) {
+        AND(operand);
+        int previousCarry = mRegisters.flags.getCarry();
+        mRegisters.A = mRegisters.A >>> 1;
+        mRegisters.A |= previousCarry << 7;
+        setZero(mRegisters.A);
+        setSign(mRegisters.A);
+        mRegisters.A &= 0xFF;
+
+        mRegisters.flags.setFlag(StatusRegister.CARRY, (mRegisters.A & 1 << 6) != 0);
+        mRegisters.flags.setFlag(StatusRegister.OVERFLOW,
+                mRegisters.flags.getFlag(StatusRegister.CARRY) ^
+                ((mRegisters.A & 1 << 5) != 0));
+    }
+
+    private void AXS(int operand) {
+        int firstOperand = mRegisters.A & mRegisters.X;
+        mRegisters.X = getSubtractResultAndSetFlagsWithoutBorrow(firstOperand, operand);
     }
 
     private void AAX(int adddressToStoreTo) {
@@ -401,6 +441,26 @@ public class Cpu {
         setSign(operand);
     }
 
+    private void SYA(int operand) {
+        int data = (mRegisters.Y & ((operand >> 8) + 1)) & 0xFF;
+        final int tmp = (operand - mRegisters.X) & 0xFF;
+        if ((mRegisters.X + tmp) <= 0xFF) {
+            mMemory.write(operand, data);
+        } else {
+            mMemory.write(operand, mMemory.read(operand));
+        }
+    }
+
+    private void SXA(int operand) {
+        int data = (mRegisters.X & ((operand >> 8) + 1)) & 0xFF;
+        final int tmp = (operand - mRegisters.Y) & 0xFF;
+        if ((mRegisters.Y + tmp) <= 0xFF) {
+            mMemory.write(operand, data);
+        } else {
+            mMemory.write(operand, mMemory.read(operand));
+        }
+    }
+
 
     private void doASL(AdressingUtils.AddressingMode addressingMode) {
         int address = mAdressingUtils.getAddressForOperand(addressingMode, READ_WRITE);
@@ -436,6 +496,7 @@ public class Cpu {
     }
 
     private void IRQ(boolean fromBRK) {
+        System.out.println("Doing IRQ");
         push(mRegisters.PC >> 8 & 0xFF);
         push(mRegisters.PC & 0xFF);
 
@@ -452,6 +513,7 @@ public class Cpu {
     }
 
     private void NMI() {
+        System.out.println("Doing NMI");
         push(mRegisters.PC >> 8 & 0xFF);
         push(mRegisters.PC & 0xFF);
 
@@ -544,6 +606,41 @@ public class Cpu {
                 break;
             case 0x8F:
                 AAX(mAdressingUtils.getAddressForOperand(ABSOLUTE, READ));
+                break;
+
+            /**
+             * ALR (Undocumented)
+             */
+            case 0x4B:
+                ALR(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
+                break;
+
+            /**
+             * ARR (Undocumented)
+             */
+            case 0x6B:
+                ARR(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
+                break;
+
+            /**
+             * ARR (Undocumented)
+             */
+            case 0xCB:
+                AXS(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
+                break;
+
+            /**
+             * SYA (Undocumented)
+             */
+            case 0x9C:
+                SYA(mAdressingUtils.getAddressForOperand(ABSOLUTE_X, READ));
+                break;
+
+            /**
+             * SXA (Undocumented)
+             */
+            case 0x9E:
+                SXA(mAdressingUtils.getAddressForOperand(ABSOLUTE_Y, READ));
                 break;
             /**
              * ADC
@@ -909,6 +1006,9 @@ public class Cpu {
             /**
              * LAX (Undocumented)
              */
+            case 0xAB:
+                LAX(mAdressingUtils.getOperand(IMMEDIATE, this, READ));
+                break;
             case 0xA7:
                 LAX(mAdressingUtils.getOperand(ZEROPAGE, this, READ));
                 break;
@@ -1412,6 +1512,7 @@ public class Cpu {
 
             default:
                 unknownOpCode = true;
+                throw new IllegalArgumentException(Integer.toHexString(instruction));
 
         }
 

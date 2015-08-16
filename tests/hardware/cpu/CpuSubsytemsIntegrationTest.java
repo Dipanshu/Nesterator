@@ -15,8 +15,8 @@ public class CpuSubsytemsIntegrationTest extends BaseIntegrationTest {
 
     private static final ImmutableMap<CpuTestRoms, String> DISABLED_TESTS = ImmutableMap.of(
             CpuTestRoms.DUMMY_READS_APU, "APU not implemented",
-            CpuTestRoms.IMMEDIATE, "Needs bug-fix",
-            CpuTestRoms.ABS_XY, "Needs bug-fix",
+            // CpuTestRoms.IMMEDIATE, "Needs bug-fix",
+            // CpuTestRoms.ABS_XY, "Needs bug-fix",
             CpuTestRoms.DUMMY_READS, "Timing out");
 
     public CpuSubsytemsIntegrationTest(TestRom rom) throws IOException {
