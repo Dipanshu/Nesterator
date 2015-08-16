@@ -59,7 +59,7 @@ public class CpuSubsytemsIntegrationTest extends BaseIntegrationTest {
         DUMMY_READS("18-dummy_reads.nes", "DUMMY_READS"),
         BRANCH_WRAP("19-branch_wrap.nes", "BRANCH_WRAP"),
         DUMMY_READS_APU("20-dummy_reads_apu.nes", "DUMMY_READS_APU"),
-        // REGISTERS("21-registers.nes", "REGISTERS"),
+        REGISTERS("21-registers.nes", "REGISTERS"),
         RAM_AFTER_RESET("22-ram_after_reset.nes", "RAM_AFTER_RESET"),
         INSTR_TIMING("42-instr_timing.nes", "INSTR_TIMING"),
         BRANCH_TIMING("43-branch_timing.nes", "BRANCH_TIMING");

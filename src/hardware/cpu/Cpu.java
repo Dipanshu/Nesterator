@@ -51,7 +51,6 @@ public class Cpu {
             @Override
             public void write(int address, int value) {
                 mNumOpcodeCycles++;
-                System.out.println("Writing " + value + " at " + Integer.toHexString(address));
                 memory.write(address, value);
             }
 
