@@ -1,23 +1,26 @@
 package hardware.cpu;
 
+import com.google.common.annotations.VisibleForTesting;
 import components.memory.Memory;
 import components.memory.MemoryRange;
+import hardware.DMAController;
 import hardware.cpu.registers.Registers;
 import hardware.cpu.registers.StatusRegister;
 
 import static hardware.cpu.AdressingUtils.AddressingMode.*;
-import static hardware.cpu.AdressingUtils.OperationType.READ;
-import static hardware.cpu.AdressingUtils.OperationType.READ_WRITE;
-import static hardware.cpu.AdressingUtils.OperationType.WRITE;
+import static hardware.cpu.AdressingUtils.OperationType.*;
 
 public class Cpu {
-    public static final int SIGN_BIT_MASK = (1 << StatusRegister.SIGN);
+    private static final int SIGN_BIT_MASK = (1 << StatusRegister.SIGN);
 
+    // Debugging Info
     private boolean mDebugMode = false;
+    private String mRegisterInfo;
     private StringBuilder mDebugLog;
     private int mPCReadCounter = 0;
 
     private final Memory mMemory;
+    private final DMAController mDMAController;
     private final Registers mRegisters;
     private final AdressingUtils mAdressingUtils;
 
@@ -25,8 +28,16 @@ public class Cpu {
     private int mNumTotalCycles;
 
     private boolean mIsFirstPop;
+    private boolean mIsOddCycle = false;
+    private boolean mDoNMI = false;
 
-    public Cpu(final Memory memory) {
+    private int mInterrupts = 0;
+    private boolean mInterruptDelay = false;
+    private boolean mPreviousInterruptDisabledValue = false;
+
+    private boolean mInterruptSignalHigh = false;
+
+    public Cpu(final Memory memory, DMAController dmaController) {
         mRegisters = new Registers();
         mMemory = new Memory() {
             @Override
@@ -47,21 +58,25 @@ public class Cpu {
             }
         };
 
-        mRegisters.PC = 0xC000;
+        mRegisters.PC = (memory.read(0xFFFC) | memory.read(0xFFFD) << 8);
         mRegisters.SP = 0xFD;
         mAdressingUtils = new AdressingUtils(this, mMemory, mRegisters);
         mNumTotalCycles = 0;
+        mDMAController = dmaController;
     }
 
-    public boolean isDebugMode() {
-        return mDebugMode;
+    public void reset() {
+        mRegisters.PC = (mMemory.read(0xFFFC) | mMemory.read(0xFFFD) << 8);
+        mRegisters.SP -= 3;
+        mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
+        mDoNMI = false;
     }
 
     public void setDebugMode(boolean debugMode) {
         mDebugMode = debugMode;
     }
 
-    protected void onPageBoundaryCrossed() {
+    void onPageBoundaryCrossed() {
         mNumOpcodeCycles++;
     }
 
@@ -82,23 +97,23 @@ public class Cpu {
         }
     }
 
-    protected int readByte() {
+    int readByte() {
         int readValue = mMemory.read(mRegisters.PC);
         mRegisters.PC++;
         mRegisters.PC &= 0xFFFF;
-        debug(String.format("  %02X", readValue));
+        if (mDebugMode) {
+            debug(String.format("  %02X", readValue));
+        }
         mPCReadCounter++;
         return readValue;
     }
 
-    protected int dummyRead() {
-        int readValue = mMemory.read(mRegisters.PC);
-        return readValue;
+    private void dummyRead() {
+        mMemory.read(mRegisters.PC);
     }
 
-    protected int dummyRead(int address) {
-        int readValue = mMemory.read(address);
-        return readValue;
+    void dummyRead(int address) {
+        mMemory.read(address);
     }
 
     private void setZero(int intValue) {
@@ -131,24 +146,23 @@ public class Cpu {
         mRegisters.A = getSubtractResultAndSetFlags(mRegisters.A, operand);
     }
 
-    private int compare(int firstOperand, int secondOperand) {
+    private void compare(int firstOperand, int secondOperand) {
         int value = firstOperand - secondOperand;
         setSign(value);
         setZero(value);
         mRegisters.flags.setFlag(StatusRegister.CARRY, !(firstOperand < secondOperand));
-        value &= 0xFF;
-        return value;
     }
 
     private int getSubtractResultAndSetFlags(int firstOperand, int secondOperand) {
-        int value = firstOperand - secondOperand - mRegisters.flags.getBorrow();
+        int borrow = mRegisters.flags.getBorrow();
+        int value = firstOperand - secondOperand - borrow;
         mRegisters.flags.setFlag(StatusRegister.OVERFLOW,
                 (firstOperand & SIGN_BIT_MASK) != (secondOperand & SIGN_BIT_MASK) &&
                         ((firstOperand & SIGN_BIT_MASK) != (value & SIGN_BIT_MASK))
         );
         setSign(value);
         setZero(value);
-        mRegisters.flags.setFlag(StatusRegister.CARRY, !(firstOperand < secondOperand));
+        mRegisters.flags.setFlag(StatusRegister.CARRY, firstOperand >= (secondOperand + borrow));
         value &= 0xFF;
         return value;
     }
@@ -200,13 +214,12 @@ public class Cpu {
         mRegisters.A = value;
     }
 
-    private int XOR(int operand) {
+    private void XOR(int operand) {
         int value = mRegisters.A ^ operand;
         setSign(value);
         setZero(value);
         value &= 0xFF;
         mRegisters.A = value;
-        return value;
     }
 
     private int ASL(int operand) {
@@ -419,9 +432,34 @@ public class Cpu {
         mMemory.write(address, value);
     }
 
+    private void IRQ() {
+        push(mRegisters.PC >> 8 & 0xFF);
+        push(mRegisters.PC & 0xFF);
+
+        mRegisters.flags.setFlag(StatusRegister.BREAK, true);
+        mRegisters.flags.setFlag(StatusRegister.NOT_USED, true);
+        int flags = mRegisters.flags.getRegister();
+        push(flags);
+        mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
+        mNumOpcodeCycles += 7;
+
+        mRegisters.PC = (mMemory.read(0xFFFE) | mMemory.read(0xFFFF) << 8);
+    }
+
+    private void NMI() {
+        push(mRegisters.PC >> 8 & 0xFF);
+        push(mRegisters.PC & 0xFF);
+
+        mRegisters.flags.setFlag(StatusRegister.BREAK, true);
+        mRegisters.flags.setFlag(StatusRegister.NOT_USED, true);
+        int flags = mRegisters.flags.getRegister();
+        push(flags);
+        mRegisters.PC = (mMemory.read(0xFFFA) | mMemory.read(0xFFFB) << 8);
+        mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
+    }
 
     private void debug(String message) {
-        if (isDebugMode()) {
+        if (mDebugMode) {
             if (this.mDebugLog == null) {
                 mDebugLog = new StringBuilder();
             }
@@ -429,22 +467,52 @@ public class Cpu {
         }
     }
 
-    private void breakOn(int on) {
-        if ((mRegisters.PC & 0xFFFF) == on) {
-            // Breakpoint
-            System.out.print("");
-        }
+    public int process() {
+        return processInternal();
     }
 
-    public void process() {
-        breakOn(0xE92E);
+    private int processInternal() {
         mNumOpcodeCycles = 0;
-        mDebugLog = new StringBuilder();
-        debug(String.format("%04X", mRegisters.PC));
+        boolean unknownOpCode = false;
+        if (mDebugMode) {
+            mDebugLog = new StringBuilder();
+            debug(String.format("%04X", mRegisters.PC));
+            mRegisterInfo = mRegisters.toString();
+        }
+
+        if (mDMAController.isActive()) {
+            mNumOpcodeCycles += mDMAController.process(mNumTotalCycles);
+            updateCycleData();
+            return mNumOpcodeCycles;
+        }
+
+        if (mDoNMI) {
+            NMI();
+            mDoNMI = false;
+            mNumOpcodeCycles += 7;
+        }
+
+        /* INTERRUPT CODE NOT WORKING :-(
+        if (mInterrupts > 0) {
+            if (!mInterruptDelay && !mRegisters.flags.getInterruptDisabled()) {
+                IRQ();
+                mNumOpcodeCycles += 7;
+                mInterrupts--;
+            } else {
+                mInterruptDelay = false;
+                if (!mPreviousInterruptDisabledValue) {
+                    IRQ();
+                    mNumOpcodeCycles += 7;
+                    mInterrupts--;
+                }
+            }
+        } else {
+            mInterruptDelay = false;
+        }
+        */
+
         mPCReadCounter = 0;
         int instruction = readByte();
-        String registerInfo = mRegisters.toString();
-        boolean unknownOpCode = false;
         mIsFirstPop = true;
         switch (instruction) {
             /**
@@ -620,16 +688,8 @@ public class Cpu {
              * BRK
              */
             case 0x00: {
-                mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
-                int flags = mRegisters.flags.getRegister();
-                flags |= 1 << StatusRegister.BREAK;
-                flags |= 1 << StatusRegister.NOT_USED;
-                push(flags);
-
-                mRegisters.PC += 2;
-                push(mRegisters.PC >> 8);
-                push(mRegisters.PC);
-
+                mRegisters.PC += 1;
+                IRQ();
                 break;
             }
 
@@ -643,6 +703,7 @@ public class Cpu {
                 mRegisters.flags.setFlag(StatusRegister.DECIMAL, false);
                 break;
             case 0x58: // Clear interrupt
+                delayInterrupt();
                 mRegisters.flags.setFlag(StatusRegister.INTERRUPT, false);
                 break;
             case 0xB8: // Clear overflow
@@ -1204,7 +1265,7 @@ public class Cpu {
                 break;
             case 0xF1:
                 SBC(mAdressingUtils.getOperand(ZEROPAGE_INDIRECT_Y, this, READ));
-                break;
+                    break;
 
             /**
              * Set flags
@@ -1216,6 +1277,7 @@ public class Cpu {
                 mRegisters.flags.setFlag(StatusRegister.DECIMAL, true);
                 break;
             case 0x78: // Clear interrupt
+                delayInterrupt();
                 mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
                 break;
 
@@ -1330,28 +1392,61 @@ public class Cpu {
                 unknownOpCode = true;
 
         }
-        if (mPCReadCounter < 3) {
-            debug("    ");
-        }
-        if (mPCReadCounter < 2) {
-            debug("    ");
-        }
-        if (mNumOpcodeCycles == 1) {
-            dummyRead();
-        }
 
-        debug("  " + registerInfo + String.format("CYC:%3d", mNumTotalCycles));
+        if (mDebugMode) {
+            if (mPCReadCounter < 3) {
+                debug("    ");
+            }
+            if (mPCReadCounter < 2) {
+                debug("    ");
+            }
+            if (mNumOpcodeCycles == 1) {
+                dummyRead();
+            }
+
+            debug("  " + mRegisterInfo + String.format("CYC:%3d", mNumTotalCycles));
+            updateCycleData();
+
+            if (unknownOpCode) {
+                debug("Unknown Opcode");
+            }
+
+            debug("\n");
+        }
+        return mNumOpcodeCycles;
+    }
+
+    private void updateCycleData() {
         mNumTotalCycles += mNumOpcodeCycles * 3;
         mNumTotalCycles %= 341;
-
-        if (unknownOpCode) {
-            debug("Unknown Opcode");
+        if (mNumOpcodeCycles % 2 != 0) {
+            mIsOddCycle = !mIsOddCycle;
         }
-        
-        debug("\n");
     }
 
     public String getDebugLog() {
         return mDebugLog.toString();
+    }
+
+    @VisibleForTesting
+    Registers getRegisters() {
+        return mRegisters;
+    }
+
+    public void startDMA(int addressHigh) {
+        mDMAController.init(addressHigh);
+    }
+
+    public void sendNMI() {
+        mDoNMI = true;
+    }
+
+    public void interrupt() {
+        mInterrupts++;
+    }
+
+    private void delayInterrupt() {
+        mInterruptDelay = true;
+        mPreviousInterruptDisabledValue = mRegisters.flags.getInterruptDisabled();
     }
 }

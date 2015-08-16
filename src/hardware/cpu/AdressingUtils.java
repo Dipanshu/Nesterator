@@ -15,7 +15,7 @@ public class AdressingUtils {
         mRegisters = registers;
     }
 
-    protected static enum AddressingMode {
+    protected enum AddressingMode {
         ACCUMULATOR,
         IMPLIED,
         IMMEDIATE,
@@ -118,8 +118,7 @@ public class AdressingUtils {
                 return mRegisters.A;
             }
             case IMMEDIATE: {
-                int operand = cpu.readByte();
-                return operand;
+                return cpu.readByte();
             }
             case ZEROPAGE:
             case ABSOLUTE:

@@ -18,7 +18,11 @@ public class TestRoms {
         return sInstance;
     }
 
-    public Rom loadCpuTestRom() throws IOException {
-        return RomLoader.loadRom(getClass().getResourceAsStream("cputest.nes"));
+    public Rom loadCpuNesTestRom() throws IOException {
+        return RomLoader.loadRom(getClass().getResourceAsStream("cpuroms/cputest.nes"));
+    }
+
+    public Rom loadRom(String name) throws IOException {
+        return RomLoader.loadRom(getClass().getResourceAsStream("cpuroms/" + name));
     }
 }

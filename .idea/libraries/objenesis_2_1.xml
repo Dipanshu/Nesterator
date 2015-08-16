@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="objenesis-2.1">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/powermock-mockito-junit-1.5.5/objenesis-2.1.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

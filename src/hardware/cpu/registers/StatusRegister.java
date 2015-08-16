@@ -48,4 +48,8 @@ public class StatusRegister {
     public void setRegister(int register) {
         this.mStatusRegister = (register & ~(1 << BREAK) | (1 << NOT_USED)) & 0xFF;
     }
+
+    public boolean getInterruptDisabled() {
+        return getFlag(INTERRUPT);
+    }
 }

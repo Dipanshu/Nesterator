@@ -26,7 +26,7 @@ public class CompositeMemory implements Memory {
     /**
      * @param blocks MemoryBlocks comprising of this composite memory. Must be adjacent
      */
-    public CompositeMemory(List<Memory> blocks) {
+    private CompositeMemory(List<Memory> blocks) {
         Map<Memory, MemoryRange> blockToRanges = Maps.newHashMapWithExpectedSize(blocks.size());
         blockToRanges.put(blocks.get(0), blocks.get(0).getRange());
         for (int i = 0; i < blocks.size(); i++) {

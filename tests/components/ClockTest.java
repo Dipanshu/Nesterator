@@ -9,11 +9,11 @@ import static org.fest.assertions.Assertions.assertThat;
  * Tests {@link components.Clock}
  */
 public class ClockTest {
-    public static final int TARGET_FREQUENCY = 60;
-    public static final int TARGET_TICK_INTERVAL = Clock.NS_PER_SECOND / TARGET_FREQUENCY;
+    private static final int TARGET_FREQUENCY = 60;
+    private static final int TARGET_TICK_INTERVAL = Clock.NS_PER_SECOND / TARGET_FREQUENCY;
 
     private static final int NUMBER_OF_TICKS = 180;
-    private static enum TestCase {
+    private enum TestCase {
         NO_OP(NO_OP_CALLBACK, TARGET_FREQUENCY, 3, 2),
         PERFECT(PERFECT_FRAME_CALLBACK, TARGET_FREQUENCY, 3, 2),
         CHEAP(CHEAP_FRAME_CALLBACK, TARGET_FREQUENCY, 3, 2),
@@ -25,7 +25,7 @@ public class ClockTest {
         private final int allowedFrequencyDeviationHz;
         private final int allowedTickIntervalDeviationMs;
 
-        private TestCase(
+        TestCase(
                 Clock.Callback callback,
                 int targetMeanFrequency,
                 int allowedFrequencyDeviationHz,
@@ -102,6 +102,7 @@ public class ClockTest {
     };
 
     private static final Clock.Callback PERFECT_FRAME_CALLBACK = new Clock.Callback() {
+        @SuppressWarnings("StatementWithEmptyBody")
         @Override
         public void callback() {
             long start = System.nanoTime();
@@ -132,6 +133,7 @@ public class ClockTest {
             mTickNum++;
         }
 
+        @SuppressWarnings("StatementWithEmptyBody")
         private void waitForNanoSeconds(int nanoSeconds) {
             long start = System.nanoTime();
             while (System.nanoTime() - start < nanoSeconds) {
@@ -146,6 +148,7 @@ public class ClockTest {
             waitForNanoSeconds(TARGET_TICK_INTERVAL * 3);
         }
 
+        @SuppressWarnings("StatementWithEmptyBody")
         private void waitForNanoSeconds(int nanoSeconds) {
             long start = System.nanoTime();
             while (System.nanoTime() - start < nanoSeconds) {

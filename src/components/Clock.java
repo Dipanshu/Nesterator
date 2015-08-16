@@ -18,7 +18,7 @@ import com.google.common.base.Preconditions;
  */
 public class Clock {
     public static final int NS_PER_SECOND = 1000000000;
-    public static final int MS_PER_SECOND = 1000;
+    private static final int MS_PER_SECOND = 1000;
     public static final int NS_PER_MS = NS_PER_SECOND / MS_PER_SECOND;
 
     private long mTickInterval = 1000000;
@@ -33,7 +33,7 @@ public class Clock {
      * @param frequencyInHz Frequency in Hertz
      * @return Instance of a clock that can be used to tick at specific intervals
      */
-    public static final Clock ClockWithFrequencyHz(Callback callback, double frequencyInHz) {
+    public static Clock ClockWithFrequencyHz(Callback callback, double frequencyInHz) {
         Preconditions.checkArgument(frequencyInHz > 0);
         return new Clock(callback, (long) ((NS_PER_SECOND) / (frequencyInHz)));
     }
@@ -59,12 +59,11 @@ public class Clock {
             } else if (mTickOvershoot < 0) {
                 timeLeft += (-mTickOvershoot);
             }
-            // System.out.println(timeLeft + " : " + mTickOvershoot);
             if (timeLeft != 0) {
                 try {
                     Thread.sleep(timeLeft / NS_PER_MS, (int) (timeLeft % NS_PER_MS));
                     timeTaken = System.nanoTime() - mTickStartTime;
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }
@@ -74,7 +73,7 @@ public class Clock {
     /**
      * Callback to be invoked by {@link components.Clock on each tick}
      */
-    public static interface Callback {
-        public void callback();
+    public interface Callback {
+        void callback();
     }
 }

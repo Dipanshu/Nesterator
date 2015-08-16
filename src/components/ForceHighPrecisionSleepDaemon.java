@@ -3,7 +3,7 @@ package components;
 /**
  * Daemon thread that forces a higher precision in {@link java.lang.Thread#sleep(long)}
  */
-public class ForceHighPrecisionSleepDaemon extends Thread {
+class ForceHighPrecisionSleepDaemon extends Thread {
 
     private static ForceHighPrecisionSleepDaemon sSharedInstance;
 
@@ -22,11 +22,12 @@ public class ForceHighPrecisionSleepDaemon extends Thread {
     }
 
     public void run() {
+        //noinspection InfiniteLoopStatement
         while(true) {
             try {
                 Thread.sleep(Long.MAX_VALUE);
             }
-            catch(Exception exc) {}
+            catch(Exception ignored) {}
         }
     }
 }

@@ -4,6 +4,7 @@ package testutil;
  * Utility class to calculate standard deviation of a series of numbers
  */
 public class StandardDeviation {
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     public static double compute(long[] data) {
         final int length = data.length;
 

@@ -6,7 +6,7 @@ public class Registers {
     public int A;
     public int X;
     public int Y;
-    public StatusRegister flags;
+    public final StatusRegister flags;
 
 
     public Registers() {

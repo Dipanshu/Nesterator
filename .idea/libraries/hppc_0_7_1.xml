@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="hppc-0.7.1">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc-benchmarks/src/main/java" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc-examples/src/test/java" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc-template-processor/src/main/java" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc-template-processor/src/test/java" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc/src/main/java" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc/src/main/templates" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc/src/test/java" />
+      <root url="file://$PROJECT_DIR$/libs/hpcc-0.7.1/source/hppc/src/test/templates" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/libs/hpcc-0.7.1" recursive="false" />
+  </library>
+</component>

@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Desktop:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Nesterator/</output-path>
+    <root id="archive" name="Nesterator.jar">
+      <element id="module-output" name="Desktop" />
+      <element id="module-output" name="Nesterator" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Desktop/libs/lwjgl/jar/lwjgl.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/guava-18.0/guava-18.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/hpcc-0.7.1/hppc-0.7.1.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/liblwjgl.dylib" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/liblwjgl.so" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/liblwjgl32.so" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/libopenal.dylib" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/libopenal.so" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/libopenal32.so" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/lwjgl.dll" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/lwjgl32.dll" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/OpenAL.dll" />
+      <element id="file-copy" path="$PROJECT_DIR$/Desktop/libs/lwjgl/native/OpenAL32.dll" />
+    </root>
+  </artifact>
+</component>

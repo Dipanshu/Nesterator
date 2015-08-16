@@ -7,8 +7,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class MemoryBlockTest {
 
-    public static final int OFFSET = 40;
-    public static final int SIZE = 64;
+    private static final int OFFSET = 40;
+    private static final int SIZE = 64;
 
     private MemoryBlock mMemoryBlock;
 

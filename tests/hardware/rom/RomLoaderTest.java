@@ -13,7 +13,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class RomLoaderTest {
     @Test
     public void testRomInit() throws IOException {
-        Rom rom = TestRoms.getInstance().loadCpuTestRom();
+        Rom rom = TestRoms.getInstance().loadCpuNesTestRom();
         assertThat(rom.getRomHeader().getCHRROMSize()).isEqualTo(1);
         assertThat(rom.getRomHeader().getPRGROMSize()).isEqualTo(1);
         assertThat(rom.getRomHeader().hasTrainer()).isFalse();

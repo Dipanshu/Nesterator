@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyNesEmulator.iml" filepath="$PROJECT_DIR$/MyNesEmulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Desktop/Desktop.iml" filepath="$PROJECT_DIR$/Desktop/Desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Nesterator.iml" filepath="$PROJECT_DIR$/Nesterator.iml" />
     </modules>
   </component>
 </project>
-

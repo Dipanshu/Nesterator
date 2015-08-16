@@ -14,6 +14,6 @@ public class MemoryRange {
 
     @Override
     public String toString() {
-        return "(" + start + " - " + end + ")";
+        return "(" + Integer.toHexString(start) + " - " + Integer.toHexString(end) + ")";
     }
 }

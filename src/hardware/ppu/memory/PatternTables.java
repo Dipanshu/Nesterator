@@ -6,9 +6,12 @@ import components.memory.MemoryUtils;
 
 public class PatternTables implements Memory {
 
-    private int[] mPatternTable1;
-    private int[] mPatternTable2;
-    private MemoryRange mMemoryRange;
+    public static final int PATTERN_TABLE_0 = 0x0000;
+    public static final int PATTERN_TABLE_1 = 0x1000;
+
+    private final int[] mPatternTable1;
+    private final int[] mPatternTable2;
+    private final MemoryRange mMemoryRange;
 
     public PatternTables() {
         mPatternTable1 = new int[0x1000];

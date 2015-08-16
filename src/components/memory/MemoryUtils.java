@@ -3,7 +3,7 @@ package components.memory;
 import com.google.common.base.Preconditions;
 
 public class MemoryUtils {
-    public static void checkRange(int address, MemoryRange range) {
+    private static void checkRange(int address, MemoryRange range) {
         Preconditions.checkArgument(address < range.end && address >= range.start, range.toString() + " does not contain " + address);
     }
 
