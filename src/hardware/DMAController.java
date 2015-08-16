@@ -33,6 +33,12 @@ public class DMAController {
         mNMIPending = false;
     }
 
+    public void stop() {
+        mIsDMAActive = false;
+        mIRQPending = false;
+        mNMIPending = false;
+    }
+
     public int process(int cpuCycle) {
         if (mDMA_state == DMA_STATE.IDLE_CYCLE) {
             mDMA_state = DMA_STATE.READING_WRITING;

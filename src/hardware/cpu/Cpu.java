@@ -31,6 +31,8 @@ public class Cpu {
     private boolean mIsOddCycle = false;
     private boolean mDoNMI = false;
 
+    private boolean mHalted = false;
+
     private int mInterrupts = 0;
     private boolean mInterruptDelay = false;
     private boolean mPreviousInterruptDisabledValue = false;
@@ -49,6 +51,7 @@ public class Cpu {
             @Override
             public void write(int address, int value) {
                 mNumOpcodeCycles++;
+                System.out.println("Writing " + value + " at " + Integer.toHexString(address));
                 memory.write(address, value);
             }
 
@@ -70,6 +73,7 @@ public class Cpu {
         mRegisters.SP -= 3;
         mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
         mDoNMI = false;
+        mDMAController.stop();
     }
 
     public void setDebugMode(boolean debugMode) {
@@ -432,13 +436,15 @@ public class Cpu {
         mMemory.write(address, value);
     }
 
-    private void IRQ() {
+    private void IRQ(boolean fromBRK) {
         push(mRegisters.PC >> 8 & 0xFF);
         push(mRegisters.PC & 0xFF);
 
-        mRegisters.flags.setFlag(StatusRegister.BREAK, true);
-        mRegisters.flags.setFlag(StatusRegister.NOT_USED, true);
         int flags = mRegisters.flags.getRegister();
+        flags |= 1 << StatusRegister.NOT_USED;
+        if (fromBRK) {
+            flags |= 1 << StatusRegister.BREAK;
+        }
         push(flags);
         mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
         mNumOpcodeCycles += 7;
@@ -450,9 +456,8 @@ public class Cpu {
         push(mRegisters.PC >> 8 & 0xFF);
         push(mRegisters.PC & 0xFF);
 
-        mRegisters.flags.setFlag(StatusRegister.BREAK, true);
-        mRegisters.flags.setFlag(StatusRegister.NOT_USED, true);
         int flags = mRegisters.flags.getRegister();
+        flags |= 1 << StatusRegister.NOT_USED;
         push(flags);
         mRegisters.PC = (mMemory.read(0xFFFA) | mMemory.read(0xFFFB) << 8);
         mRegisters.flags.setFlag(StatusRegister.INTERRUPT, true);
@@ -472,6 +477,9 @@ public class Cpu {
     }
 
     private int processInternal() {
+        if (mHalted) {
+            return 0;
+        }
         mNumOpcodeCycles = 0;
         boolean unknownOpCode = false;
         if (mDebugMode) {
@@ -689,7 +697,7 @@ public class Cpu {
              */
             case 0x00: {
                 mRegisters.PC += 1;
-                IRQ();
+                IRQ(true /* fromBRK */);
                 break;
             }
 
@@ -1388,6 +1396,21 @@ public class Cpu {
                 setZero(mRegisters.Y);
                 setSign(mRegisters.Y);
                 break;
+
+            case 0x02:
+            case 0x12:
+            case 0x32:
+            case 0x42:
+            case 0x52:
+            case 0x62:
+            case 0x72:
+            case 0x92:
+            case 0xB2:
+            case 0xD2:
+            case 0xF2:
+                mHalted = true;
+                break;
+
             default:
                 unknownOpCode = true;
 

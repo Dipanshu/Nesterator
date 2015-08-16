@@ -1,6 +1,7 @@
 package hardware.util;
 
 import com.google.common.collect.ImmutableMap;
+import components.TickCalculator;
 import hardware.NES;
 import hardware.cpu.Cpu;
 import hardware.memory.NesMemory;
@@ -15,12 +16,14 @@ public abstract class BaseIntegrationTest {
 
     private final TestRom mRom;
     private StringBuilder mStringBuilder;
+    private final TickCalculator mTickCalculator;
 
     public BaseIntegrationTest(TestRom rom) throws IOException {
         mRom = rom;
+        mTickCalculator = new TickCalculator();
     }
 
-    @Test(timeout = 30000)
+    @Test
     public void testRom() throws IOException, TimeoutException {
         ImmutableMap<? extends TestRom, String> disabledTests = getDisabledTests();
         if (disabledTests.containsKey(mRom)) {
@@ -61,10 +64,15 @@ public abstract class BaseIntegrationTest {
             if (testStarted) {
                 if (status == 0x81) {
                     System.out.println("Test wants reset");
-                    long start = System.currentTimeMillis();
-                    while (System.currentTimeMillis() - start < 1000) {
-                        cpu.process();
+                    long numCpuCycles = mTickCalculator.getNumCpuCycles(2);
+
+                    //noinspection StatementWithEmptyBody
+                    for (int i = 0; i < numCpuCycles; i += cpu.process()) {
+                        int cpuCycles = cpu.process();
+                        ppu.clock(cpuCycles * 3);
+                        i += cpuCycles;
                     }
+
                     testStarted = false;
                     cpu.reset();
                     continue;

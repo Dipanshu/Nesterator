@@ -71,6 +71,6 @@ public class PpuIntegrationTest extends BaseIntegrationTest {
 
     @Override
     public boolean logEnabled() {
-        return false; // return true;
+        return false;
     }
 }
